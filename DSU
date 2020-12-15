@@ -1,0 +1,47 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long 
+#define pb push_back
+#define pp pair
+int arr[100];
+int size[100];
+int classs[100];
+int roots(int n)//looks for main root and change it to main along the way.
+{
+	if(arr[n]==n)
+		return n;
+	return arr[n]=roots(arr[n]);
+}
+void unions(int a,int b)//join/make set of two different root.
+{
+	if(roots(a)!=roots(b))
+	{
+		a=roots(a);
+		b=roots(b);
+		if(size[a]<size[b])
+		 swap(a,b);
+		arr[b]=a;
+		size[a]+=size[b];
+	}
+}
+int main()
+{
+	for (int i = 0; i < 10000; ++i)//setting of initial root and size. size=0,arr[1]=1||arr[2]=2;
+	{
+		arr[i]=i;
+		size[i]=0;
+	}
+	while(k--)
+	{
+		int x,y;
+		cin>>x>>y;
+		unions(x,y);
+	}
+	for (int i = 0; i < 3; ++i)
+	{
+		int x;
+		cin>>x;
+		cout<<arr[x]<<endl;
+	}
+	return 0;
+}
