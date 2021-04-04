@@ -1,0 +1,42 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long int
+#define pb push_back
+#define pp pair
+ll lcm(ll a,ll b)
+{
+	return a*b/__gcd(a,b);
+}
+//it can return number of sets.
+//-->spoj NGM2..
+ll count(vector<ll> &v,ll n)
+{
+	int t=v.size();
+	ll sum=0;
+	for (int i = 1; i < (1<<t); ++i)
+	{
+		ll keep=1;
+		for (int j = 0;j < t; ++j)
+		{
+			if( i & (1<<j) )
+             keep=lcm(keep,v[j]);
+		}
+		if(1 & __builtin_popcount(i))
+			sum+=n/keep;
+		else 
+			sum-=n/keep;
+	}
+	return sum;
+}
+int main()
+{
+	ll n,k;
+	cin>>n>>k;
+	vector<ll> v(k);
+	for (int i = 0; i < k; ++i)
+	{
+		cin>>v[i];
+	}
+	cout<<n-count(v,n)<<endl;
+	return 0;
+}
