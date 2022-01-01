@@ -1,67 +1,69 @@
-//	            	Bismillah
-#include<bits/stdc++.h>
+//	            	 Bismillah
+#include "bits/stdc++.h"
 using namespace std;
 #define ll long long 
 #define pb push_back
 #define endl "\n"
 #define ins insert
 #define ps push
-#define lim 10000
-ll arr[lim];
-ll tree[lim*3];
-//b->starting of tree,e->ending of tree,node->always from start,(i,j)->relevent section
-//zero based indexing....!
-void init(int node,int b,int e)
-{
-	if(b==e)
-	{
-		tree[node]=arr[b];
-		return;
-	}
-	int left=2*node;
-	int right=2*node+1;
-	int mid=(b+e)/2;
-	init(left,b,mid);
-	init(right,mid+1,e);
-	tree[node]=tree[left]+tree[right];
-}
-ll query(int node,int b,int e,int i,int j)
-{
-	if(b>j or e<i)
-		return 0;
-	if(b>=i and e<=j)
-		return tree[node];
-	int left=node*2;
-	int right=node*2+1;
-	int mid=(b+e)/2;
-	return query(left,b,mid,i,j)+query(right,mid+1,e,i,j);
-}
-void update(int node,int b,int e,int i,int newvalue)
-{
-	if(b>i or e<i)
-		return;
-	if(b>=i and e<=i)
-	{
-		tree[node]=newvalue;
-		return;
-	}
-	int left=node*2;
-	int right=node*2+1;
-	int mid=(b+e)/2;
-	update(left,b,mid,i,newvalue);
-	update(right,mid+1,e,i,newvalue);
-	tree[node]=tree[left]+tree[right];
-}
+#define pp pair
+#define fast  ios_base::sync_with_stdio(false); cin.tie(NULL);
+/*
+the seg tree is one base indexed.
 
-int main()
+
+
+
+*/
+ll mod=1e9+7;
+ll mxl=1e5+7;
+vector<ll> tree(4*100000);
+void build(vector<ll> &v,ll index,ll start,ll end)
 {
-	int n;
-	cin>>n;
-	for (int i = 1; i <= n; ++i)
+	if(start>end)
+		return;
+	if(start==end)
 	{
-		cin>>arr[i];
+		tree[index] = v[start];
+		return;
 	}
-	init(1,1,n);
-	cout<<query(1,1,n,,2)<<endl;
+	//bottom up segment build(Spread and build).
+	ll mid = (start+end)/2;
+	build(v,2*index,start,mid);
+	build(v,2*index+1,mid+1,end);
+	tree[index] = tree[2*index] + tree[2*index+1];
+}
+void update(ll index,ll start,ll end,ll idx,ll val)
+{
+	if(start>idx || end<idx)
+		return;
+	if(idx<=start and idx>=end)
+	{
+		tree[index] += val;
+		return;
+	}
+	//update recursively..
+	ll mid = (start+end)/2;
+	update(2*index,start,mid,idx,val);
+	update(2*index+1,mid+1,end,idx,val);
+	tree[index] = tree[index*2]+tree[1+2*index]; 
+}
+//range sum/mul i to j
+ll query(ll index,ll start,ll end,ll i,ll j)
+{
+	if(start>j or end<i)
+		return 0;
+	if(start>=i and j>=end)
+		return tree[index];
+	ll mid  = (start+end)/2;
+	ll q1 = query(index*2,start,mid,i,j);
+	ll q2 = query(index*2+1,mid+1,end,i,j);
+	return q1+q2;
+}
+signed main()
+{
+	build(v,1,0,n-1);//values of n element is in v.
+	update(1,0,n-1,idx,val);//idx means index that is supposed to update with the value val.
+	query(1,0,n-1,t,y)//query starting from t to y inclusively.
 	return 0;
 }
